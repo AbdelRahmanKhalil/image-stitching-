@@ -1,4 +1,5 @@
 import numpy as np
+from numpy.core.shape_base import atleast_1d
 import cv2
 import matplotlib.pyplot as plt
 from skimage import io
@@ -57,3 +58,38 @@ get_points("image2.jpg")
 point_matrix_2 =  point_matrix
 
 
+def create_a_matrix(point_matrix_11,point_matrix_22, crr_num): #correspondence number
+        a= np.zeros((2,9),np.int)
+        # a = [[ - point_matrix_11(crr_num,0) , - point_matrix_11(crr_num,1) , -1 , 0 , 0 , 0 , point_matrix_11(crr_num,0) * point_matrix_22(crr_num,0) , point_matrix_11(crr_num,1) * point_matrix_22(crr_num,0) , point_matrix_22(crr_num,0)], 
+        #      [ 0 , 0 , 0 , - point_matrix_11(crr_num,0) , - point_matrix_11(crr_num,1) , -1 , point_matrix_11(crr_num,0) * point_matrix_22(crr_num,1) , point_matrix_11(crr_num,1) * point_matrix_22(crr_num,1) , point_matrix_22(crr_num,1)]]
+        
+        a[0][0]= - point_matrix_11[crr_num][0]
+        a[0][1]= - point_matrix_11[crr_num][1]
+        a[0][2]= -1
+        a[0][6]= point_matrix_11[crr_num][0] * point_matrix_22[crr_num][0]
+        a[0][7]= point_matrix_11[crr_num][1] * point_matrix_22[crr_num][0]
+        a[0][8]= point_matrix_22[crr_num][0]
+
+        a[1][3]= - point_matrix_11[crr_num][0]
+        a[1][4]= - point_matrix_11[crr_num][1]
+        a[1][5]= -1
+        a[1][6]= point_matrix_11[crr_num][0] * point_matrix_22[crr_num][1]
+        a[1][7]= point_matrix_11[crr_num][1] * point_matrix_22[crr_num][1]
+        a[1][8]= point_matrix_22[crr_num][1]
+        return a
+def compute_homography():
+    
+    a1= create_a_matrix(point_matrix_1,point_matrix_2,0)
+    a2= create_a_matrix(point_matrix_1,point_matrix_2,1)
+    a3= create_a_matrix(point_matrix_1,point_matrix_2,2)
+    a4= create_a_matrix(point_matrix_1,point_matrix_2,3)
+
+    a= np.concatenate((a1,a2,a3,a4), axis=0)
+    return a
+
+A = compute_homography()
+print("A=", A)
+u,s,vh= np.linalg.svd(A)
+print("u=", u)
+print("s=", s)
+print("vh=", vh)
