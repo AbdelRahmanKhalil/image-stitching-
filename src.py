@@ -85,11 +85,13 @@ def compute_homography():
     a4= create_a_matrix(point_matrix_1,point_matrix_2,3)
 
     a= np.concatenate((a1,a2,a3,a4), axis=0)
-    return a
-
-A = compute_homography()
-print("A=", A)
-u,s,vh= np.linalg.svd(A)
-print("u=", u)
-print("s=", s)
-print("vh=", vh)
+    print("a=", a)
+    u,s,vh= np.linalg.svd(a)
+    print("u=", u)
+    print("s=", s)
+    print("vh=", vh)
+    print("vh shape=", np.shape(vh))
+    h= vh[:,8]
+    print("h shape=", np.shape(h))
+    print("h=", h)
+compute_homography()
