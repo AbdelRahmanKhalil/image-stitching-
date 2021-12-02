@@ -132,7 +132,7 @@ if __name__ == "__main__":
          [0, 1, 12],
          [0, 0, 1]]
 
-    homography = np.reshape(H, (3, 3))
+    homography = np.reshape(h, (3, 3))
 
     img1 = cv2.imread("image1.jpg")
     img2 = cv2.imread("image2.jpg")
