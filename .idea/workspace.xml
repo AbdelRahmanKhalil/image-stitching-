@@ -1,9 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="5a9d2e4b-8f2c-4148-bc6d-39ac1f46e9d0" name="Changes" comment="second update">
-      <change afterPath="$PROJECT_DIR$/my.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+    <list default="true" id="5a9d2e4b-8f2c-4148-bc6d-39ac1f46e9d0" name="Changes" comment="homograph place changed">
       <change beforePath="$PROJECT_DIR$/src.py" beforeDir="false" afterPath="$PROJECT_DIR$/src.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -85,7 +83,14 @@
       <option name="project" value="LOCAL" />
       <updated>1638454754682</updated>
     </task>
-    <option name="localTasksCounter" value="4" />
+    <task id="LOCAL-00004" summary="homograph place changed">
+      <created>1638458854374</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1638458854374</updated>
+    </task>
+    <option name="localTasksCounter" value="5" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -103,6 +108,7 @@
     <option name="ADD_EXTERNAL_FILES_SILENTLY" value="true" />
     <MESSAGE value="updates for warping (commented functions for emergencies)" />
     <MESSAGE value="second update" />
-    <option name="LAST_COMMIT_MESSAGE" value="second update" />
+    <MESSAGE value="homograph place changed" />
+    <option name="LAST_COMMIT_MESSAGE" value="homograph place changed" />
   </component>
 </project>
