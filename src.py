@@ -3,6 +3,8 @@ from numpy.core.shape_base import atleast_1d
 import cv2
 import matplotlib.pyplot as plt
 from skimage import io
+from PIL import Image
+
 
 # img1_BGR = cv2.imread('image1.jpg')
 # img1_rgb = cv2.cvtColor(img1_BGR, cv2.COLOR_BGR2RGB)
@@ -100,78 +102,19 @@ def compute_homography():
     return h
 
 
-# def getValues(img,H):
-#   coords = dict()
-#   minX = 0x7fffffff
-#   minY = 0x7fffffff
-#   maxX = -1 * 0x7fffffff
-#   maxY = -1 * 0x7fffffff
-#   for row in range(img.shape[0]):
-#     for col in range(img.shape[1]):
-#       homgCoords = np.array([(col, row, 1)]).T
-#       transformedCoords = H.dot(homgCoords)
-#       transformedCoords = transformedCoords/transformedCoords[2];
-#       newX, newY = int(transformedCoords[0]),int(transformedCoords[1])
-#       coords[row,col]=np.array([(newX, newY)])
-#       minX = min(minX, newX)
-#       minY = min(minY, newY)
-#       maxX = max(maxX, newX)
-#       maxY = max(maxY, newY)
-#   return minX, minY, maxX,maxY, coords
+
+def invWarping(warpedImage,H,originalImage):
 
 
-# def warpingImage(img, H, nChannels=3):
-#     minX, minY, maxX, maxY, coords = getValues(img, H)
-#     shiftX = minX * -1
-#     shiftY = minY * -1
-#     warpedImage = np.zeros(((maxX - minX) + 2, (maxX - minX) + 2, nChannels, 2))
-#     returnImage = np.zeros(((maxY - minY) + 2, (maxX - minX) + 2, nChannels))
-#     for row in range(img.shape[0]):
-#         for col in range(img.shape[1]):
-#             newX, newY = coords[row, col][0][0], coords[row, col][0][1]
-#             newX += shiftX
-#             newY += shiftY
-#             subpixels = np.array([(newX, newY), (newX + 1, newY), (newX, newY + 1), (newX + 1, newY + 1)])
-#             for subpixel in subpixels:
-#                 for channel in range(nChannels):
-#                     warpedImage[subpixel[1]][subpixel[0]][channel][0] += 1
-#                     warpedImage[subpixel[1]][subpixel[0]][channel][1] += img[row][col][channel]
-#     for row in range(warpedImage.shape[0]):
-#         for col in range(warpedImage.shape[1]):
-#             for channel in range(nChannels):
-#                 if warpedImage[row][col][channel][0] > 0:
-#                     returnImage[row][col][channel] = warpedImage[row][col][channel][1] // \
-#                                                      warpedImage[row][col][channel][0]
-#
-#     return shiftX, shiftY, returnImage.astype(np.uint8)
-
-def to_img(mtr):
-    V, H, C = mtr.shape
-    img = np.zeros((H, V, C), dtype='int')
-    for i in range(mtr.shape[0]):
-        img[:, i] = mtr[i]
-
-    return img
 
 
-def to_mtx(img):
-    H, V, C = img.shape
-    mtr = np.zeros((V, H, C), dtype='int')
-    for i in range(img.shape[0]):
-        mtr[:, i] = img[i]
-
-    return mtr
-
-def warpingImage(sourceImg, H, destImg):
+def warpingImage(sourceImg, homography, destImg):
     warpedIMage = np.zeros((destImg.shape[0], destImg.shape[1], 3),dtype= int)
-    homography = np.reshape(H, (3, 3))
 
     for i in range(sourceImg.shape[0]):
         for j in range(sourceImg.shape[1]):
-            point = np.array([i, j, 1])
-            # new_points = np.reshape(point, (3, 1))
-            # print(new_points.shape)
-            # print(new_points)
+            point = np.reshape(np.array([i, j, 1]),(3,1))
+
 
             newPoints = np.dot(homography, point)
             x_dash = int(newPoints[0] / newPoints[2])
@@ -179,17 +122,9 @@ def warpingImage(sourceImg, H, destImg):
             if destImg.shape[0] > x_dash >= 0 and y_dash < destImg.shape[1] and y_dash >= 0:
                 
                 warpedIMage[x_dash][y_dash] = sourceImg[i][j]
-                #print(warpedIMage[x_dash][y_dash])
 
-    # img = np.array(warpedIMage / np.amax(warpedIMage) * 255, np.int32)
 
-    #plt.imshow(warpedIMage)
-    # warpedIMage[:, :, 0] = np.ones([683, 1024]) * 64 / 255.0
-    # warpedIMage[:, :, 1] = np.ones([683, 1024]) * 128 / 255.0
-    # warpedIMage[:, :, 2] = np.ones([683, 1024]) * 192 / 255.0
-    converted = to_img(warpedIMage.astype(np.uint8))
-    #cv2.imshow("Warped image", warpedIMage.astype(np.uint8))
-    cv2.imshow("Warped image", converted.astype(np.uint8))
+    cv2.imshow("Warped image", warpedIMage.astype(np.uint8))
     cv2.waitKey(0)
 
 if __name__ == "__main__":
@@ -199,6 +134,9 @@ if __name__ == "__main__":
     get_points("image2.jpg")
     point_matrix_2 = np.copy(point_matrix)
     H = compute_homography()
+
+    homography = np.reshape(H, (3, 3))
+
 
     img1 = cv2.imread("image1.jpg")
     img2 = cv2.imread("image2.jpg")
