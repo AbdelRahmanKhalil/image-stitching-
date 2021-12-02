@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="5a9d2e4b-8f2c-4148-bc6d-39ac1f46e9d0" name="Changes" comment="homograph place changed">
+    <list default="true" id="5a9d2e4b-8f2c-4148-bc6d-39ac1f46e9d0" name="Changes" comment="h small ya3am :)">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src.py" beforeDir="false" afterPath="$PROJECT_DIR$/src.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -90,7 +91,21 @@
       <option name="project" value="LOCAL" />
       <updated>1638458854374</updated>
     </task>
-    <option name="localTasksCounter" value="5" />
+    <task id="LOCAL-00005" summary="changed place of homography">
+      <created>1638459205591</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1638459205591</updated>
+    </task>
+    <task id="LOCAL-00006" summary="h small ya3am :)">
+      <created>1638459301789</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1638459301789</updated>
+    </task>
+    <option name="localTasksCounter" value="7" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -109,6 +124,8 @@
     <MESSAGE value="updates for warping (commented functions for emergencies)" />
     <MESSAGE value="second update" />
     <MESSAGE value="homograph place changed" />
-    <option name="LAST_COMMIT_MESSAGE" value="homograph place changed" />
+    <MESSAGE value="changed place of homography" />
+    <MESSAGE value="h small ya3am :)" />
+    <option name="LAST_COMMIT_MESSAGE" value="h small ya3am :)" />
   </component>
 </project>

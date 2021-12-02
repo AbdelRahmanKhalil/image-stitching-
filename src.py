@@ -3,6 +3,7 @@ from numpy.core.shape_base import atleast_1d
 import cv2
 import matplotlib.pyplot as plt
 from skimage import io
+import math as M
 
 # img1_BGR = cv2.imread('image1.jpg')
 # img1_rgb = cv2.cvtColor(img1_BGR, cv2.COLOR_BGR2RGB)
@@ -94,7 +95,7 @@ def compute_homography():
     print("s=", s)
     print("vh=", vh)
     print("vh shape=", np.shape(vh))
-    h = vh[8].reshape((3,3)) # take last column + reshape it to 3x3
+    h = vh[-1].reshape((3,3)) # take last column + reshape it to 3x3
     h = h / h[2][2]
     print("h shape=", np.shape(h))
     print("h=", h)
@@ -102,8 +103,47 @@ def compute_homography():
     return h
 
 
+def invWarping(warpedImage, originalImage, homography):
+    h_inverse = np.linalg.inv(homography)
+    for i in range(warpedImage.shape[0]):
+        for j in range(warpedImage.shape[1]):
+            point = np.array([i, j, 1])
+            # new_points = np.reshape(point, (3, 1))
+            # print(new_points.shape)
+            # print(new_points)
+
+            newPoints = h_inverse.dot(point)
+            x_original = float(newPoints[0] / newPoints[2])
+            y_original = float(newPoints[1] / newPoints[2])
+
+            if np.all(warpedImage[i][j] == 0) :
+                x2 = int(M.ceil(x_original))
+                y2 = int(M.ceil(y_original))
+                x1 = int(M.floor(x_original))
+                y1 = int(M.floor(y_original))
+                p1 = [x1, y1]  # smaller x and y
+                p2 = [x2, y1]  # bigger x and smaller y
+                p3 = [x1, y2]  # smaller x and bigger y
+                p4 = [x2, y2]  # bigger x and y
+                weight1 = (1 - (x_original - p1[0])) * (1 - (y_original - p1[1]))
+                weight2 = (1 - (p2[0] - x_original)) * (1 - (y_original - p2[1]))
+                weight3 = (1 - (x_original - p3[0])) * (1 - (p3[1] - y_original))
+                weight4 = (1 - (p4[1] - x_original)) * (1 - (p4[1] - y_original))
+
+                if x2 < originalImage.shape[0] and y2 < originalImage.shape[1] and x1>=0 and x2>=0 :
+
+                    new_rgb = originalImage[p1[0]][p1[1]] * weight1 + originalImage[p2[0]][p2[1]] * weight2 + \
+                          originalImage[p3[0]][p3[1]] * weight3 + originalImage[p4[0]][p4[1]] * weight4
+
+                    warpedImage[i][j] = new_rgb
+
+    print(warpedImage)
+    cv2.imshow("inverse image", warpedImage.astype(np.uint8))
+    cv2.waitKey(0)
+
+
 def warpingImage(sourceImg, homography, destImg):
-    warpedIMage = np.zeros((destImg.shape[0], destImg.shape[1], 3), dtype=int)
+    warpedIMage = np.zeros((destImg.shape[0]+500, destImg.shape[1]+500, 3), dtype=int)
 
     for i in range(sourceImg.shape[0]):
         for j in range(sourceImg.shape[1]):
@@ -115,12 +155,13 @@ def warpingImage(sourceImg, homography, destImg):
             newPoints = np.dot(homography, point)
             x_dash = int(newPoints[0] / newPoints[2])
             y_dash = int(newPoints[1] / newPoints[2])
-            if destImg.shape[0] > x_dash and x_dash >= 0 and y_dash < destImg.shape[1] and y_dash >= 0:
+            if destImg.shape[0]+500 > x_dash and x_dash >= 0 and y_dash < destImg.shape[1]+500 and y_dash >= 0:
                 warpedIMage[x_dash][y_dash] = sourceImg[i][j]
 
     print(warpedIMage)
-    cv2.imshow("Warped image", warpedIMage.astype(np.uint8))
-    cv2.waitKey(0)
+
+
+    return warpedIMage
 
 
 if __name__ == "__main__":
@@ -134,9 +175,16 @@ if __name__ == "__main__":
          [0, 1, 12],
          [0, 0, 1]]
 
-    homography = np.reshape(H, (3, 3))
 
     img1 = cv2.imread("image1.jpg")
     img2 = cv2.imread("image2.jpg")
     print("img1 shape=", np.shape(img1))
-    warpingImage(img2, H, img1)
+    wimg = warpingImage(img1, H, img2)
+    # translation = [[1, 0, 100],
+    #                [0, 1, -100],
+    #                [0, 0, 1]]
+
+    newImage=warpingImage(wimg,H,img2)
+    cv2.imshow("Warped image", newImage.astype(np.uint8))
+    cv2.waitKey(0)
+    invWarping(warpedImage=wimg, originalImage=img1, homography=H)
