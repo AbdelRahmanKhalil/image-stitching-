@@ -164,6 +164,28 @@ def warpingImage(sourceImg, homography, destImg):
     return warpedIMage
 
 
+def stitchImages(origImg, transformedImg, shiftX, shiftY, nChannels = 3):
+  newImg = np.zeros(((origImg.shape[0] + transformedImg.shape[0]), (origImg.shape[1] + transformedImg.shape[1]), nChannels))
+  newImg[0:transformedImg.shape[0],0:transformedImg.shape[1]] = transformedImg
+  for row in range(origImg.shape[0]):
+    for col in range(origImg.shape[1]):
+      newX, newY = col + shiftX , row + shiftY
+      newImg[newY][newX] = origImg[row][col]
+  # delete black rows & columns
+  idx = np.argwhere(np.all(newImg[..., :] == 0, axis=0))
+  newImg = np.delete(newImg, idx, axis=1)
+  idx = np.argwhere(np.all(newImg[..., :] == 0, axis=1))
+  newImg = np.delete(newImg, idx, axis=0)
+  # rotate image columns if shift was -ve
+  if shiftX < 0:
+    newImg = np.roll(newImg, -1* shiftX, axis=1)
+  if shiftY < 0:
+    newImg = np.roll(newImg, -1* shiftY, axis=0)
+  return newImg.astype(np.uint8)
+
+
+
+
 if __name__ == "__main__":
     get_points("image1.jpg")
     point_matrix_1 = np.copy(point_matrix)
