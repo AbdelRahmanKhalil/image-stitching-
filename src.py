@@ -77,6 +77,7 @@ def create_a_matrix(point_matrix_11, point_matrix_22, crr_num):  # correspondenc
     a[1][6] = point_matrix_11[crr_num][0] * point_matrix_22[crr_num][1]
     a[1][7] = point_matrix_11[crr_num][1] * point_matrix_22[crr_num][1]
     a[1][8] = point_matrix_22[crr_num][1]
+    print("a = " , a)
     return a
 
 
@@ -93,7 +94,8 @@ def compute_homography():
     print("s=", s)
     print("vh=", vh)
     print("vh shape=", np.shape(vh))
-    h = vh[:, 8]
+    h = vh[8].reshape((3,3)) # take last column + reshape it to 3x3
+    h = h / h[2][2]
     print("h shape=", np.shape(h))
     print("h=", h)
 
@@ -132,9 +134,9 @@ if __name__ == "__main__":
          [0, 1, 12],
          [0, 0, 1]]
 
-    homography = np.reshape(h, (3, 3))
+    homography = np.reshape(H, (3, 3))
 
     img1 = cv2.imread("image1.jpg")
     img2 = cv2.imread("image2.jpg")
     print("img1 shape=", np.shape(img1))
-    warpingImage(img2, homography, img1)
+    warpingImage(img2, H, img1)
