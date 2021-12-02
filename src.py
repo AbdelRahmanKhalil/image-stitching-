@@ -176,7 +176,7 @@ def warpingImage(sourceImg, H, destImg):
             newPoints = np.dot(homography, point)
             x_dash = int(newPoints[0] / newPoints[2])
             y_dash = int(newPoints[1] / newPoints[2])
-            if destImg.shape[0] > x_dash >= 0 and y_dash < destImg.shape[1] and y_dash >= 0:
+            if destImg.shape[0] > x_dash and x_dash >= 0 and y_dash < destImg.shape[1] and y_dash >= 0:
                 
                 warpedIMage[x_dash][y_dash] = sourceImg[i][j]
                 #print(warpedIMage[x_dash][y_dash])
@@ -187,9 +187,10 @@ def warpingImage(sourceImg, H, destImg):
     # warpedIMage[:, :, 0] = np.ones([683, 1024]) * 64 / 255.0
     # warpedIMage[:, :, 1] = np.ones([683, 1024]) * 128 / 255.0
     # warpedIMage[:, :, 2] = np.ones([683, 1024]) * 192 / 255.0
-    converted = to_img(warpedIMage.astype(np.uint8))
-    #cv2.imshow("Warped image", warpedIMage.astype(np.uint8))
-    cv2.imshow("Warped image", converted.astype(np.uint8))
+    #converted = to_img(warpedIMage.astype(np.uint8))
+    print(warpedIMage)
+    cv2.imshow("Warped image", warpedIMage.astype(np.uint8))
+    #cv2.imshow("Warped image", converted.astype(np.uint8))
     cv2.waitKey(0)
 
 if __name__ == "__main__":
@@ -199,7 +200,10 @@ if __name__ == "__main__":
     get_points("image2.jpg")
     point_matrix_2 = np.copy(point_matrix)
     H = compute_homography()
-
+    h=[[1,0,12],
+    [0,1,12],
+    [0,0,1]]
     img1 = cv2.imread("image1.jpg")
     img2 = cv2.imread("image2.jpg")
-    warpingImage(img2, H, img1)
+    print("img1 shape=",np.shape(img1))
+    warpingImage(img2, h, img1)
