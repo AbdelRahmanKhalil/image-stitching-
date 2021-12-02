@@ -163,7 +163,7 @@ def to_mtx(img):
     return mtr
 
 def warpingImage(sourceImg, H, destImg):
-    warpedIMage = np.zeros((destImg.shape[0], destImg.shape[1], 3))
+    warpedIMage = np.zeros((destImg.shape[0], destImg.shape[1], 3),dtype= int)
     homography = np.reshape(H, (3, 3))
 
     for i in range(sourceImg.shape[0]):
@@ -177,13 +177,19 @@ def warpingImage(sourceImg, H, destImg):
             x_dash = int(newPoints[0] / newPoints[2])
             y_dash = int(newPoints[1] / newPoints[2])
             if destImg.shape[0] > x_dash >= 0 and y_dash < destImg.shape[1] and y_dash >= 0:
-
+                
                 warpedIMage[x_dash][y_dash] = sourceImg[i][j]
+                #print(warpedIMage[x_dash][y_dash])
 
     # img = np.array(warpedIMage / np.amax(warpedIMage) * 255, np.int32)
 
     #plt.imshow(warpedIMage)
-    cv2.imshow("Warped image", warpedIMage)
+    # warpedIMage[:, :, 0] = np.ones([683, 1024]) * 64 / 255.0
+    # warpedIMage[:, :, 1] = np.ones([683, 1024]) * 128 / 255.0
+    # warpedIMage[:, :, 2] = np.ones([683, 1024]) * 192 / 255.0
+    converted = to_img(warpedIMage.astype(np.uint8))
+    #cv2.imshow("Warped image", warpedIMage.astype(np.uint8))
+    cv2.imshow("Warped image", converted.astype(np.uint8))
     cv2.waitKey(0)
 
 if __name__ == "__main__":
