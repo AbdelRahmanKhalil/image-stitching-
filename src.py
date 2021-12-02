@@ -55,6 +55,7 @@ def get_points(image_path):
 
         # Refreshing window all time
         cv2.waitKey(1)
+    cv2.destroyAllWindows()
     print(point_matrix)
 
 
@@ -97,7 +98,6 @@ def compute_homography():
     print("h=", h)
 
     return h
-
 
 
 # def getValues(img,H):
@@ -145,19 +145,44 @@ def compute_homography():
 #
 #     return shiftX, shiftY, returnImage.astype(np.uint8)
 
+def to_img(mtr):
+    V, H, C = mtr.shape
+    img = np.zeros((H, V, C), dtype='int')
+    for i in range(mtr.shape[0]):
+        img[:, i] = mtr[i]
+
+    return img
+
+
+def to_mtx(img):
+    H, V, C = img.shape
+    mtr = np.zeros((V, H, C), dtype='int')
+    for i in range(img.shape[0]):
+        mtr[:, i] = img[i]
+
+    return mtr
 
 def warpingImage(sourceImg, H, destImg):
-    warpedIMage = np.zeros((destImg.shape[1], destImg.shape[0], 3))
+    warpedIMage = np.zeros((destImg.shape[0], destImg.shape[1], 3))
+    homography = np.reshape(H, (3, 3))
 
-    for i in range(sourceImg.shape[1]):
-        for j in range(sourceImg.shape[0]):
-            point = np.array([i, j, 3]).transpose()
-            newPoints = np.dot(H, point)
+    for i in range(sourceImg.shape[0]):
+        for j in range(sourceImg.shape[1]):
+            point = np.array([i, j, 1])
+            # new_points = np.reshape(point, (3, 1))
+            # print(new_points.shape)
+            # print(new_points)
+
+            newPoints = np.dot(homography, point)
             x_dash = int(newPoints[0] / newPoints[2])
             y_dash = int(newPoints[1] / newPoints[2])
-            warpedIMage[i][j] = sourceImg[i][j]
+            if destImg.shape[0] > x_dash >= 0 and y_dash < destImg.shape[1] and y_dash >= 0:
 
+                warpedIMage[x_dash][y_dash] = sourceImg[i][j]
 
+    # img = np.array(warpedIMage / np.amax(warpedIMage) * 255, np.int32)
+
+    plt.imshow(warpedIMage)
 
 
 if __name__ == "__main__":
