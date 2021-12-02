@@ -182,8 +182,9 @@ def warpingImage(sourceImg, H, destImg):
 
     # img = np.array(warpedIMage / np.amax(warpedIMage) * 255, np.int32)
 
-    plt.imshow(warpedIMage)
-
+    #plt.imshow(warpedIMage)
+    cv2.imshow("Warped image", warpedIMage)
+    cv2.waitKey(0)
 
 if __name__ == "__main__":
     get_points("image1.jpg")
