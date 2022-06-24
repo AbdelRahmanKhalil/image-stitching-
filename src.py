@@ -206,7 +206,7 @@ if __name__ == "__main__":
     #                [0, 1, -100],
     #                [0, 0, 1]]
 
-    newImage=warpingImage(wimg,H,img2)
-    cv2.imshow("Warped image", newImage.astype(np.uint8))
+    
+    cv2.imshow("Warped image", wimg.astype(np.uint8))
     cv2.waitKey(0)
     invWarping(warpedImage=wimg, originalImage=img1, homography=H)
